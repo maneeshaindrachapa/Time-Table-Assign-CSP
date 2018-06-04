@@ -1,13 +1,13 @@
 import copy
+#csv comma seperate values ,without using csv module
 
 def inputData(fileName):
     with open(fileName, 'r') as fileOb:
         text = fileOb.read()
         lines = text.split('\n')
-        data = [];          #subject details and rooms 3d array
+        data = []; #subject details and rooms as array
         for line in lines:
             data.append(line.split(','))
-        print data
         return data
 
 def outputData(fileName, data):
@@ -29,9 +29,9 @@ def backtracking(assignment, slots, depth):
         return True                             #every row of assignement is assigned with room,slot
     global subs
     global rooms  
-    sub = subs[depth][0]                        #subject name                       
+    sub = subs[depth][0]                        #subject name                      
     available = subs[depth][2:]                 #array - available time slots for subject
-    category = subs[depth][1]                   #compulsory or optional
+    category = subs[depth][1]                   #compulsory or optional, c|o
     if (category == "c"):                       #always select empty time slot and assign                      
         for slot in available:
             if (slots[slot] == -1):             #if slot is empty
@@ -46,12 +46,12 @@ def backtracking(assignment, slots, depth):
             return False                        #cannot continue with any of available slots, combinations used so far are not wrong
         
     elif (category == "o"):                     #select empty slot or slot with optional subjects
-        for slot in available:
-            if (slots[slot] == -1):
-                assignment[depth] = [sub, slot, rooms[0]]
-                slots[slot] = [rooms[0]]
+        for slot in available:                  
+            if (slots[slot] == -1):             #if slot is empty
+                assignment[depth] = [sub, slot, rooms[0]] #assign sub,slot and first room to assignment
+                slots[slot] = [rooms[0]]        #update slots(dictionary) with room_no(str)
                 if (backtracking(assignment, slots, depth+1)):
-                    return True
+                    return True                 #remaining slots and rooms are enough for lower level
                 else:
                     slots[slot] = -1
                     assignment[depth] = [sub, -1, -1]
@@ -73,7 +73,7 @@ def backtracking(assignment, slots, depth):
 
 inputDetails = inputData('input.csv')
 
-subs = inputDetails[:-1]    #3d array - sub_name,type,available_slots... per each row
+subs = inputDetails[:-1]    #3d array - sub_name,type,available_slots
 rooms = inputDetails[-1]    #array - room names
 slots = {}                  #dictionary - key is slot_name, when c sub assigned value is room_name, when o sub assigned value is array of room_names
 assignment = []             #3d array - sub_name,assigned_slot,room_name per each row
@@ -86,8 +86,8 @@ for sub in subs:
 
 result = backtracking(assignment, slots, 0)
 
-print result
 if (result):
     outputData('output.csv', assignment)
+    print "\n"
     for sub in assignment:
-        print sub
+       print sub
