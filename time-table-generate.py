@@ -70,3 +70,24 @@ def backtracking(assignment, slots, depth):
                     assignment[depth] = [sub, -1, -1]
         else:
             return False
+
+inputDetails = inputData('input.csv')
+
+subs = inputDetails[:-1]    #3d array - sub_name,type,available_slots... per each row
+rooms = inputDetails[-1]    #array - room names
+slots = {}                  #dictionary - key is slot_name, when c sub assigned value is room_name, when o sub assigned value is array of room_names
+assignment = []             #3d array - sub_name,assigned_slot,room_name per each row
+
+for sub in subs:
+    for slot in sub[2:]:
+        if (slot not in slots):
+            slots[slot] = -1
+    assignment.append([sub[0],-1,-1])
+
+result = backtracking(assignment, slots, 0)
+
+print result
+if (result):
+    outputData('output.csv', assignment)
+    for sub in assignment:
+        print sub
