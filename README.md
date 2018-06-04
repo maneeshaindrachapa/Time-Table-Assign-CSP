@@ -1,4 +1,4 @@
-# Time-Table-Assignment
+# Time-Table-Assign-CSP
 Simple time table generator according  to the data given, modelling as constraint satisfaction problem
 
 Let’s assign<br>
